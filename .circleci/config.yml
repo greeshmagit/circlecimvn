@@ -7,7 +7,7 @@ jobs:
             - image: node:current-alpine
               auth:
                 username: pgreeshma
-                password: pgr55shm1  # context / project UI env-var reference
+                password: pgr55shma  # context / project UI env-var reference
         steps:
             - checkout
             - run:
