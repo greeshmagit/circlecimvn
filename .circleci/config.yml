@@ -1,19 +1,96 @@
 version: 2.1
 jobs:
-  build:
-    #working_directory: /cimvn
-     # chmod +x /cimvn
+  build-maven:
+    working_directory: ~/cimvn
+    prepare-dependencies:
     docker:
       - image: cimg/openjdk:11.0  
+       auth:
+          username: pgreeshma
+          password: pgr55shma
     steps:
       - checkout
       - run: mvn clean package
+  build-docker:
+    docker:
+      - image: cimg/openjdk:11.0  
+       auth:
+          username: pgreeshma
+          password: pgr55shma
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: docker build
+            command: |
+                      export __BUILD_VERSION="$(cat version.txt)"
+                      docker build -t pgreeshma/circlemvn:v1 .
+            - store_artifacts:
+                  path: pgreeshma/circlemvn
+            - persist_to_workspace:
+                  root: .
+                  paths:
+                      - .
+
+   build-docker-image:
+     machine:
+            # The image uses the current tag, which always points to the most recent
+            # supported release. If stability and determinism are crucial for your CI
+            # pipeline, use a release date tag with your image, e.g. ubuntu-2004:202201-02
+        image: ubuntu:latest
+        steps:
+          - attach_workspace:
+              at: .
+          - run:
+              name: Setup __BUILD_VERSION envvar
+              command: |
+                echo 'export __BUILD_VERSION="$(cat version.txt)"' >> "$BASH_ENV"
+          - docker/check:
+              registry: pgreeshma
+          - docker/build:
+              image: circlemvn
+              tag: $__BUILD_VERSION
+              registry: pgreeshma
+          - docker/push:
+              image: circlemvn
+              tag: $__BUILD_VERSION
+              registry: pgreeshma
+ 
+ deploy-docker-image:
+        machine:
+            image: ubuntu-latest
+        steps:
+            - attach_workspace:
+                  at: .
+            - run:
+                  name: Setup __BUILD_VERSION envvar
+                  command: |
+                      echo 'export __BUILD_VERSION="$(cat version.txt)"' >> "$BASH_ENV"
+            - docker/check:
+                  registry: pgreeshma
+            - docker/pull:
+                  images: pgreeshma/circlemvn:$__BUILD_VERSION
+            - run:
+                  name: Tag the image as latest
+                  command: docker tag pgreeshma/circlemvn:$__BUILD_VERSION pgreeshma/circlemvn:latest
+            - docker/push:
+                  image: circlemvn
+                  tag: latest
+                  registry: pgreeshma              
+      
   test:
     docker:
       - image: cimg/openjdk:11.0  
     steps:
       - checkout
       - run: mvn test
+  deploy:
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - run: echo "this is the deploy job"
+      - run: docker run -d -p 8080:8080 --name tomcat pgreeshma/circlemvn:v1
 workflows:
   test_and_build:
     jobs:
@@ -21,3 +98,11 @@ workflows:
       - build:
           requires:
             - test
+      - hold:
+          type: approval
+          requires:
+            - build
+            - test
+      - deploy:
+          requires:
+            - hold
