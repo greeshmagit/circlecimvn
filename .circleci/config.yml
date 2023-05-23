@@ -33,6 +33,7 @@ jobs:
 
   build-maven:
     working_directory: ~/cimvn
+    #/home/circleci/project/pgreeshma/circlemvn
     #/home/circleci/cimvn/target/cimvn.war
     docker:
       - image: cimg/openjdk:11.0  
@@ -56,16 +57,17 @@ jobs:
           version: 20.10.14
           docker_layer_caching: true
       - attach_workspace:
-          at: .
+          at: /home/circleci/cimvn/target/
       - run:
           name: docker build
           command: |
               export __BUILD_VERSION="$(cat version.txt)"
+              docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
                      
       - store_artifacts:
           path: pgreeshma/circlemvn/
       - persist_to_workspace:
-          root: /home/circleci/cimvn/target/cimvn.war
+          root: .
           paths:
             - .
 
@@ -74,7 +76,7 @@ jobs:
             # The image uses the current tag, which always points to the most recent
             # supported release. If stability and determinism are crucial for your CI
             # pipeline, use a release date tag with your image, e.g. ubuntu-2004:202201-02
-      image: ubuntu:latest
+      image: circlemvn:latest
     steps:
       - attach_workspace:
           at: .
