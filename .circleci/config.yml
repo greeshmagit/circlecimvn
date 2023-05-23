@@ -131,14 +131,14 @@ workflows:
                       - prepare-dependencies
                       - build-maven
             - build-docker-image:
-                  context: docker-hub
+                  #context: docker-hub
                   requires:
                       - build-docker
             - test:
                   requires:
                       - prepare-dependencies
             - deploy-docker-image:
-                  context: docker-hub
+                  #context: docker-hub
                   requires:
                       - build-docker-image
                       - test
