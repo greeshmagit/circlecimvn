@@ -60,14 +60,13 @@ jobs:
           name: docker build
           command: |
               export __BUILD_VERSION="$(cat version.txt)"
-              docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
-              
-     # - store_artifacts:
-      #    path: /home/circleci/cimvn/target/cimvn.war
-      #- persist_to_workspace:
-       #   root: .
-        # paths:
-         #   - .
+                     
+      - store_artifacts:
+          path: pgreeshma/circlemvn/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   build-docker-image:
     machine:
