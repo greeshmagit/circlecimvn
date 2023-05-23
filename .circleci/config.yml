@@ -54,7 +54,7 @@ jobs:
           name: docker build
           command: |
               export __BUILD_VERSION="$(cat version.txt)"
-              docker build
+              docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
       - store_artifacts:
           path: pgreeshma/circlemvn
       - persist_to_workspace:
