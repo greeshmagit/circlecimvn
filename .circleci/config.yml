@@ -1,0 +1,14 @@
+version: 2.1
+jobs:
+  build:
+    steps:
+      - checkout
+      - run: mvn clean package
+    working_directory: /cimvn
+    docker:
+      - image: cimg/openjdk:11.0   
+workflows:
+  test_and_build:
+    jobs:
+      - build
+      
