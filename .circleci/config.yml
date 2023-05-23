@@ -55,6 +55,7 @@ jobs:
           command: |
               export __BUILD_VERSION="$(cat version.txt)"
               docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
+              sudo service docker restart
       - store_artifacts:
           path: pgreeshma/circlemvn
       - persist_to_workspace:
