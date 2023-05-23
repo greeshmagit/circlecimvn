@@ -1,83 +1,84 @@
 version: 2.1
+orbs:
+  docker: circleci/docker@1.7.0
 jobs:
-  working_directory: ~/cimvn
-  build:
-    build-maven:
-      docker:
-        - image: cimg/openjdk:11.0  
-          auth:
-            username: pgreeshma
-            password: pgr55shma
-      steps:
+  maven:
+    docker:
+      - image: cimg/openjdk:11.0  
+        auth:
+          username: pgreeshma
+          password: pgr55shma
+    steps:
         - checkout
         - run: mvn clean package
-    build-docker:
-      docker:
-        - image: cimg/openjdk:11.0  
-          auth:
-            username: pgreeshma
-            password: pgr55shma
-      steps:
-        - checkout
+    
+  build:
+        docker:
+          - image: cimg/openjdk:11.0  
+            auth:
+              username: pgreeshma
+              password: pgr55shma
+        steps:
+          - checkout
              # ... steps for building/testing app ...
-        - setup_remote_docker:
-            version: 20.10.14
-            docker_layer_caching: true
-        - attach_workspace:
-            at: .
-        - run:
-            name: docker build
-            command: 
-			docker build -t pgreeshma/circlemvn:v1 .
-            - store_artifacts:
-                  path: greeshma/circlemvn/
-            - persist_to_workspace:
-                  root: .
-                  paths:
-                      - .
-
-     push-docker-image:
-       machine:
-            # The image uses the current tag, which always points to the most recent
-            # supported release. If stability and determinism are crucial for your CI
-            # pipeline, use a release date tag with your image, e.g. ubuntu-2004:202201-02
-       image: circlemvn:v1
-       steps:
-         - attach_workspace:
+          - setup_remote_docker:
+              version: 20.10.14
+              docker_layer_caching: true
+          - attach_workspace:
               at: .
-	   - run:
-             name: Setup __BUILD_VERSION envvar
-             command: |
-                    echo 'export __BUILD_VERSION="v1"' >> "$BASH_ENV"
-         - docker/check:
-             registry: pgreeshma
-          
-         - docker/push:
-             image: circlemvn
-             tag: v1
-             registry: pgreeshma
- 
-     deploy-docker-image:
-       machine:
-       image: circlemvn:v1
-       steps:
-         - attach_workspace:
-             at: .
-         - run:
-             name: Setup __BUILD_VERSION envvar
-             command: |
-                echo 'export __BUILD_VERSION="v1"' >> "$BASH_ENV"
-         - docker/check:
-             registry: pgreeshma
-         - docker/pull:
-             images: pgreeshma/circlemvn:$__BUILD_VERSION
-         - run:
-             name: Tag the image as latest
-             command: docker tag pgreeshma/circlemvn:$__BUILD_VERSION pgreeshma/circlemvn:latest
-         - docker/push:
-             image: circlemvn
-             tag: latest
-             registry: pgreeshma              
+          - run:
+              name: docker build
+              command: |
+                 docker build -t pgreeshma/circlemvn:v1 .
+          - store_artifacts:
+              path: greeshma/circlemvn/
+          - persist_to_workspace:
+              root: .
+              paths:
+                      - .
+    
+  push:
+    machine:
+      image: circlemvn:v1
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Setup __BUILD_VERSION envvar and push docker image
+          command: |
+            echo 'export __BUILD_VERSION="v1"' >> "$BASH_ENV"
+      - docker/check:
+          registry: pgreeshma
+          docker-username: pgreeshma  
+          docker-password: pgr55shma
+      - docker/push:
+          image: circlemvn
+          tag: v1
+          registry: pgreeshma
+            
+  tag:
+    machine:
+      image: circlemvn:v1
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Setup __BUILD_VERSION envvar
+          command: |
+            echo 'export __BUILD_VERSION="v1"' >> "$BASH_ENV"
+      - docker/check:
+          docker-username: pgreeshma  
+          docker-password: pgr55shma                        
+      - docker/pull:
+          images: pgreeshma/circlemvn:$__BUILD_VERSION
+      - run:
+          name: Tag the image as latest
+          command: |
+            docker tag pgreeshma/circlemvn:$__BUILD_VERSION pgreeshma/circlemvn:latest
+      - docker/push:
+          image: circlemvn
+          tag: latest
+          registry: pgreeshma              
       
   test:
     docker:
@@ -93,16 +94,28 @@ jobs:
       - run: echo "this is the deploy job"
       - run: docker run -d -p 8080:8080 --name tomcat pgreeshma/circlemvn:v1
 workflows:
-  test_and_build:
+  test_build_push_tag_deploy:
     jobs:
       - test
-      - build:
+      - maven:
           requires:
             - test
+      - build:
+          requires:
+            - maven
+      - push:
+          requires:
+            - build
+      - tag:
+          requires:
+            - push
       - hold:
           type: approval
           requires:
+            - maven
             - build
+            - push
+            - tag
             - test
       - deploy:
           requires:
