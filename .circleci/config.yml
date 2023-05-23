@@ -63,7 +63,7 @@ jobs:
               docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
               
       - store_artifacts:
-          path: pgreeshma/circlemvn
+          path: /home/circleci/cimvn/target/cimvn.war
       - persist_to_workspace:
           root: .
           paths:
