@@ -33,7 +33,7 @@ jobs:
 
   build-maven:
     working_directory: ~/cimvn
-    /home/circleci/cimvn/target/cimvn.war
+    #/home/circleci/cimvn/target/cimvn.war
     docker:
       - image: cimg/openjdk:11.0  
         auth:
