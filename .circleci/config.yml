@@ -54,7 +54,7 @@ jobs:
           name: docker build
           command: |
               export __BUILD_VERSION="$(cat version.txt)"
-              yarn build
+              docker build
       - store_artifacts:
           path: pgreeshma/circlemvn
       - persist_to_workspace:
