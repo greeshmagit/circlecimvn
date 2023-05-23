@@ -53,10 +53,9 @@ jobs:
       - run:
           name: docker build
           command: |
-              export __BUILD_VERSION="$(cat version.txt)"
               docker context ls 
               docker context use default 
-              sudo service docker restart
+              export __BUILD_VERSION="$(cat version.txt)"
               docker build -t pgreeshma/circlemvn:$__BUILD_VERSION .
               
       - store_artifacts:
