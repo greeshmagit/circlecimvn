@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
   build:
-    working_directory: /cimvn
-      chmod +x /cimvn
+    #working_directory: /cimvn
+     # chmod +x /cimvn
     docker:
       - image: cimg/openjdk:11.0  
     steps:
