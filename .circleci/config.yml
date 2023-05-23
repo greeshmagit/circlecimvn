@@ -33,6 +33,7 @@ jobs:
 
   build-maven:
     working_directory: ~/cimvn
+    /home/circleci/cimvn/target/cimvn.war
     docker:
       - image: cimg/openjdk:11.0  
         auth:
@@ -64,7 +65,7 @@ jobs:
       - store_artifacts:
           path: pgreeshma/circlemvn/
       - persist_to_workspace:
-          root: .
+          root: /home/circleci/cimvn/target/cimvn.war
           paths:
             - .
 
