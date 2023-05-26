@@ -14,13 +14,19 @@ jobs:
           docker_layer_caching: true
       - attach_workspace:
           at: .
-      #- run: docker login -u pgreeshma -p pgr55shma
       - run: docker build -t pgreeshma/circlemvn:v1 .
   push:
-    docker:
-    - image: pgreeshma/circlemvn:v1
-    steps:
-      - checkout
+    machine:
+      image: circlemvn:v1 
+    steps:   
+      - docker/check:
+          registry: pgreeshma
+          docker-username: pgreeshma  
+          docker-password: pgr55shma
+      - docker/push:
+          image: circlemvn
+          tag: v1
+          registry: pgreeshma
       - run: docker push pgreeshma/circlemvn:v1
 
   deploy:
@@ -30,15 +36,14 @@ jobs:
       - checkout
       - run: ssh docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
 workflow:
-  version: 2.1
-  full_workflow:
+  build_push_deploy:
   jobs:
     - build
     - push:
-      requires:
-        - build
+        requires:
+          - build
     - deploy:
-      requires:
-        - push
+        requires:
+          - push
       
 
