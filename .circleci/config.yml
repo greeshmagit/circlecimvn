@@ -27,7 +27,9 @@ jobs:
 workflows:
   build_deploy:
     jobs:
-      - build
+      - build:
+          context:
+            - docker_creds
       - deploy:
           requires:
             - build
