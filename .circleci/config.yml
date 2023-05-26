@@ -5,10 +5,10 @@ jobs:
   working_directory: ~/circlecimvn
   build:
     docker:
-    - image: cimg/openjdk:11.0
-    auth:
-      - docker-username: pgreeshma  
-        docker-password: pgr55shma
+      - image: cimg/openjdk:11.0
+        auth:
+          username: pgreeshma  
+          password: pgr55shma
     steps:
       - checkout
       - run: mvn clean package
@@ -18,13 +18,6 @@ jobs:
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
-      - docker/check:
-          docker-username: pgreeshma  
-          docker-password: pgr55shma
-      - run:
-          name: Setup __BUILD_VERSION envvar
-          command: |
-            echo 'export __BUILD_VERSION="$CIRCLE_BUILD_NUM "' >> "$BASH_ENV"
       - docker/push:
           image: circlemvn
           tag: v1
