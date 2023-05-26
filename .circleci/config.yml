@@ -29,7 +29,7 @@ workflow:
   jobs:
     - build:
         context:
-          - docker-hub creds 
+          - docker_creds
     - deploy:
         requires:
           - build
