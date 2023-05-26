@@ -15,7 +15,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
-      - run: docker login -u pgreeshma --password pgr55shma
+      - run: docker login -u pgreeshma --password $docker_pass
       - run: docker push pgreeshma/circlemvn:v1
 
   deploy:
@@ -27,7 +27,9 @@ jobs:
 workflow:
   build_push_deploy:
   jobs:
-    - build
+    - build:
+        context:
+          - docker-hub creds 
     - deploy:
         requires:
           - build
