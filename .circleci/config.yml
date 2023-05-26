@@ -14,8 +14,13 @@ jobs:
           docker_layer_caching: true
       - attach_workspace:
           at: .
-      - run: docker build -t pgreeshma/circlemvn:v1 .  
+      - run: docker build -t pgreeshma/circlemvn:v1 .
+      - run:
+          name: Setup __BUILD_VERSION envvar and push docker image
+          command: |
+            echo 'export __BUILD_VERSION="v1"' >> "$BASH_ENV"
       - docker/check:
+          registry: pgreeshma
           docker-username: pgreeshma  
           docker-password: pgr55shma
       - docker/push:
