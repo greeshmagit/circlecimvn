@@ -21,6 +21,11 @@ jobs:
     - image: pgreeshma/circlemvn:v1
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - attach_workspace:
+          at: .
       #- run: docker login -u pgreeshma -p pgr55shma
       - run: docker push pgreeshma/circlemvn:v1
 
@@ -34,7 +39,10 @@ workflow:
   version: 2.1
   full_workflow:
   jobs:
-    - build
+    - package
+    - build:
+      requires:
+        - package
     - push:
       requires:
         - build
