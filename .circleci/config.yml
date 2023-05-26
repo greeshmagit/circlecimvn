@@ -16,14 +16,13 @@ jobs:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .  
       - docker/check:
-          registry: pgreeshma
           docker-username: pgreeshma  
           docker-password: pgr55shma
       - docker/push:
           image: circlemvn
           tag: v1
           registry: pgreeshma
-      - run: docker push pgreeshma/circlemvn:v1
+      #- run: docker push pgreeshma/circlemvn:v1
 
   deploy:
     docker:
