@@ -18,7 +18,9 @@ jobs:
   push:
     machine:
       image: circlemvn:v1 
-    steps:   
+    steps: 
+      - attach_workspace:
+          at: .  
       - docker/check:
           registry: pgreeshma
           docker-username: pgreeshma  
