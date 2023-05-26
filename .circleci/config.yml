@@ -38,7 +38,6 @@ workflow:
   build_push_deploy:
   jobs:
     - build
-        context: my_context_name
     - deploy:
         requires:
           - build
