@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - run: mvn clean package
-      - run : sudo chkconfig docker on
+      - run : systemctl enable docker 
       - run: docker build -t pgreeshma/circlemvn:v1 .
   push:
     docker:
