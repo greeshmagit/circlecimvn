@@ -15,6 +15,10 @@ jobs:
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
+      - run:
+          name: "echo an env var that is part of our context"
+          command: |
+            echo $MY_ENV_VAR
       - docker/check:
           docker-username: pgreeshma  
           docker-password: pgr55shma
@@ -34,6 +38,7 @@ workflow:
   build_push_deploy:
   jobs:
     - build
+        context: my_context_name
     - deploy:
         requires:
           - build
