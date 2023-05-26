@@ -6,9 +6,6 @@ jobs:
   build:
     docker:
       - image: cimg/openjdk:11.0
-        auth:
-          username: pgreeshma  
-          password: pgr55shma
     steps:
       - checkout
       - run: mvn clean package
@@ -18,11 +15,8 @@ jobs:
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
-      - docker/push:
-          image: circlemvn
-          tag: v1
-          registry: pgreeshma
-      #- run: docker push pgreeshma/circlemvn:v1
+      - run: docker login -u pgreeshma -p pgr55shma.
+      - run: docker push pgreeshma/circlemvn:v1
 
   deploy:
     docker:
