@@ -12,6 +12,7 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
+      #- run: sudo systemctl service docker enable
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
@@ -21,9 +22,12 @@ jobs:
   deploy:
     docker:
       - image : pgreeshma/circlemvn:v1
+        auth:
+          username: pgreeshma
+          password: $docker_pass 
     steps:
-      - checkout
-      - run: docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
+      - run: 
+          echo docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
 workflows:
   build_deploy:
     jobs:
