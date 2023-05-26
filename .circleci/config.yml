@@ -17,19 +17,18 @@ jobs:
       - run: docker build -t pgreeshma/circlemvn:v1 .
       - run: docker login -u pgreeshma --password pgr55shma
       - run: docker push pgreeshma/circlemvn:v1
-
   deploy:
     docker:
       - image : pgreeshma/circlemvn:v1
     steps:
       - checkout
-      - run: ssh docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
+      - run: docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
 workflow:
   build_deploy:
-  jobs:
-    - build
-    - deploy:
-        requires:
-          - build
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
       
 
