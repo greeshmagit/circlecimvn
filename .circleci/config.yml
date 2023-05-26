@@ -15,13 +15,13 @@ jobs:
       - attach_workspace:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
-      - run:
-          name: "echo an env var that is part of our context"
-          command: |
-            echo $MY_ENV_VAR
       - docker/check:
           docker-username: pgreeshma  
           docker-password: pgr55shma
+      - run:
+          name: Setup __BUILD_VERSION envvar
+          command: |
+            echo 'export __BUILD_VERSION="$CIRCLE_BUILD_NUM "' >> "$BASH_ENV"
       - docker/push:
           image: circlemvn
           tag: v1
