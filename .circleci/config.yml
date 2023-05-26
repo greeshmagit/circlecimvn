@@ -3,19 +3,13 @@ version: 2.1
   #docker: circleci/docker@1.7.0
 jobs:
   working_directory: ~/circlecimvn
-  package:
+    build:
     docker:
     - image: cimg/openjdk:11.0
     steps:
       - checkout
-      - run: mvn clean package
-          
-  build:
-    docker:
-    - image: cimg/openjdk:11.0
-    steps:
-      - checkout
-      - run : chkconfig docker on
+       - run: mvn clean package
+      - run : sudo chkconfig docker on
       - run: docker build -t pgreeshma/circlemvn:v1 .
   push:
     docker:
@@ -40,10 +34,7 @@ workflow:
   version: 2.1
   full_workflow:
   jobs:
-    - package
-    - build:
-      requires:
-        - package
+    - build
     - push:
       requires:
         - build
