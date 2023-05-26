@@ -3,7 +3,7 @@ version: 2.1
   #docker: circleci/docker@1.7.0
 jobs:
   working_directory: ~/circlecimvn
-    build:
+  build:
     docker:
     - image: cimg/openjdk:11.0
     steps:
