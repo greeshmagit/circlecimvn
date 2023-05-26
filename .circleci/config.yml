@@ -23,7 +23,7 @@ jobs:
     steps:
       - checkout
       - run: docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
-workflow:
+workflows:
   build_deploy:
     jobs:
       - build
