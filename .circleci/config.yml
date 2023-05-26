@@ -27,7 +27,7 @@ jobs:
           password: $docker_pass 
     steps:
       - run: 
-          echo docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
+          echo ssh localhost@127.0.0.1 docker run -d -p 8080:8080 --name tomcat1 pgreeshma/circlemvn:v1
 workflows:
   build_deploy:
     jobs:
