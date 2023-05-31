@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   docker: circleci/docker@1.7.0
 jobs:
-  working_directory: ~/circlecimvn
+  #working_directory: ~/circlecimvn
   build:
     docker:
       - image: cimg/openjdk:11.0
@@ -34,8 +34,10 @@ workflows:
       - build:
           context:
             - docker_creds
-      - deploy:
+      - hold:
+          type: approval
           requires:
             - build
-      
-
+      - deploy:
+          requires:
+            - hold

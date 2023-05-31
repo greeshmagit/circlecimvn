@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: welcome_app
+spec:
+  selector:
+    matchLabels:
+      app: welcome_app
+  template:
+    metadata:
+      labels:
+        app: welcome_app
+    spec:
+      containers:
+      - name: javawebapp
+        image: pgreeshma/circlemvn:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
