@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.7.0
-  sonarcloud: sonarsource/sonarcloud@1.1.0
 jobs:
   #working_directory: ~/circlecimvn
   build:
@@ -11,7 +10,6 @@ jobs:
       - checkout
       - run: docker-compose up -d
       - run: mvn clean package
-      - sonarcloud/scan
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
@@ -20,6 +18,10 @@ jobs:
           at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
       #- run: docker login -u pgreeshma --password pgr55shma
+  test:
+    docker:
+      - image: cimg/openjdk:11.0
+      
       - run: echo  "$docker_pass" | docker login --username pgreeshma --password-stdin
       - run: docker push pgreeshma/circlemvn:v1
   deploy:
@@ -36,7 +38,6 @@ workflows:
     jobs:
       - build:
           context: 
-            sonarcloud
             - docker_creds
       - hold:
           type: approval
