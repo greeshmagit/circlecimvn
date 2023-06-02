@@ -34,9 +34,9 @@ workflows:
   build_deploy:
     jobs:
       - build:
-          context:
+          context: sonarcloud
             - docker_creds
-            sonarcloud
+            
       - hold:
           type: approval
           requires:
