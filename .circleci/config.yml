@@ -40,11 +40,11 @@ jobs:
 workflows:
   build_deploy:
     jobs:
-      - test:
+      - test
       - build:
           context: 
             - docker_creds
-            requires:
+          requires:
             - test
       - hold:
           type: approval
