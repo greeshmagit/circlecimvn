@@ -9,6 +9,7 @@ jobs:
       - image: cimg/openjdk:11.0
     steps:
       - checkout
+      - run: docker-compose up –build -d
       - run: mvn clean package
       - sonarcloud/scan
       - setup_remote_docker:
