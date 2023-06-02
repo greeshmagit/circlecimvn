@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.7.0
-  #sonarcloud: sonarsource/sonarcloud@1.1.0
+  sonarcloud: sonarsource/sonarcloud@1.1.0
 jobs:
   #working_directory: ~/circlecimvn
   build:
@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run: docker-compose up -d
       - run: mvn clean package
-     #- sonarcloud/scan
+      - sonarcloud/scan
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
@@ -36,6 +36,7 @@ workflows:
     jobs:
       - build:
           context: 
+            sonarcloud
             - docker_creds
       - hold:
           type: approval
