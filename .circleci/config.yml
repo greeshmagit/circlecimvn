@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.7.0
-  sonarcloud: sonarsource/sonarcloud@1.1.0
+  #sonarcloud: sonarsource/sonarcloud@1.1.0
 jobs:
   #working_directory: ~/circlecimvn
   build:
@@ -35,7 +35,7 @@ workflows:
   build_deploy:
     jobs:
       - build:
-          context: sonarcloud
+          #context: sonarcloud
             - docker_creds
             
       - hold:
