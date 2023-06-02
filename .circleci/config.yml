@@ -35,7 +35,7 @@ jobs:
           at: .
       - run: mvn sonar:sonar
       #- run: -Dsonar.token=myAuthenticationToken
-      #- run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
+      - run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
       #- run: Dsonar.host.url=https://sonarcloud.io
   deploy:
     docker:
