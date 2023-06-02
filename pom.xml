@@ -15,6 +15,9 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <properties>
+      <sonar.organization>default</sonar.organization>
+  </properties>
   <build>
     <finalName>cimvn</finalName>
   </build>
