@@ -8,14 +8,13 @@ jobs:
       - image: cimg/openjdk:11.0
     steps:
       - checkout
-      - run: docker-compose up -d
       - run: mvn clean package
-      - setup_remote_docker:
-          version: 20.10.14
-          docker_layer_caching: true
+      #- setup_remote_docker:
+          #version: 20.10.14
+          #docker_layer_caching: true
       #- run: sudo systemctl service docker enable
-      - attach_workspace:
-          at: .
+      #- attach_workspace:
+          #at: .
       - run: docker build -t pgreeshma/circlemvn:v1 .
       #- run: docker login -u pgreeshma --password pgr55shma
       - run: echo  "$docker_pass" | docker login --username pgreeshma --password-stdin
@@ -26,6 +25,12 @@ jobs:
     steps:
       - checkout
       - run: docker-compose up -d
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      #- run: sudo systemctl service docker enable
+      - attach_workspace:
+          at: .
       - run: mvn sonar:sonar
   
   deploy:
