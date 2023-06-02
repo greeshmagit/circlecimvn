@@ -34,7 +34,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: mvn sonar:sonar
-      - run: Dsonar.host.url=https://sonarcloud.io
+      #- run: Dsonar.host.url=https://sonarcloud.io
   deploy:
     docker:
       - image : pgreeshma/circlemvn:v1
