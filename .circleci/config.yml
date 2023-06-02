@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run: docker-compose up –build -d
       - run: mvn clean package
-      - sonarcloud/scan
+     #- sonarcloud/scan
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
@@ -35,9 +35,8 @@ workflows:
   build_deploy:
     jobs:
       - build:
-          #context: sonarcloud
+          context: 
             - docker_creds
-            
       - hold:
           type: approval
           requires:
