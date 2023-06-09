@@ -11,6 +11,8 @@ pipeline{
         stage ("installing jenkins and sonarqube"){
           steps{
                 sh "docker-compose up –build -d"
+          }
+        }  
         stage("Maven build"){
           steps{
                    sh 'mvn  clean package'
@@ -38,17 +40,7 @@ pipeline{
                         }
                    }
           }
-        stage("deploy to tomcat"){
-            when{
-                      branch "qatest"
-                 }
-                 steps{
-                    tomcatdeploy('ec2-user','172.31.1.31','tomcat')
-               
-                }
-          }
-       }
-  }
+     }
 }
                       
 
