@@ -1,12 +1,13 @@
 
 pipeline{
-  agent{label "slave-linux"}
+  //agent{label "slave-linux"}
+  agent any
     stages{
-         stage("Git checkout"){
+        /* stage("Git checkout"){
             steps{
                      git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/greeshmagit/circlecimvn.git'
                  }
-        }
+        }*/
         stage ("installing jenkins and sonarqube"){
           steps{
                 sh "docker-compose up –build -d"
@@ -48,5 +49,6 @@ pipeline{
           }
        }
   }
+}
                       
 
