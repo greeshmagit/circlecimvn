@@ -10,7 +10,7 @@ pipeline{
         }*/
         stage ("installing jenkins and sonarqube"){
           steps{
-                sh "docker-compose up –build -d"
+                sh "docker compose up –build -d"
           }
         }  
         stage("Maven build"){
