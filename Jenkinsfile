@@ -7,12 +7,12 @@ pipeline{
             steps{
                      git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/greeshmagit/circlecimvn.git'
                  }
-        }*/
-        stage ("installing jenkins and sonarqube"){
+        }
+        stage ("installing sonarqube"){
           steps{
                 sh "docker compose up -d "
           }
-        }  
+        }*/
         stage("Maven build"){
           steps{
                    sh 'mvn  clean package'
