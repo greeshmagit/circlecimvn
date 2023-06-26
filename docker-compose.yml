@@ -1,16 +1,6 @@
 version: '3.8'
 services:
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    volumes:
-       - jenkins_data:/var/jenkins_home
-    networks:
-      - sonarnet
-    ports:
-      - '8081:8081'
-      - '50000:50000'
-
   sonarqube:
     image: sonarqube:9.8-community 
     volumes:
